@@ -4,6 +4,7 @@ var $taskInput = $("#new-task");
 var $addButton = $("#add");
 var $incompleteTasksList = $("#incomplete-tasks");
 var $completedTasksList = $("#completed-tasks");
+// Created task map in order to add list items for Google Calendar //
 var taskMap = {};
 
 var taskItem = {
@@ -12,7 +13,7 @@ var taskItem = {
         var name = $taskInput.val();
         
         if (name.length > 0) {
-			
+// Build counter to create task items //			
 			var task = $('<li></li>');
             var counter = $('[name="Task"]').length;
 			var taskId = name+counter;
@@ -30,6 +31,7 @@ var taskItem = {
             $incompleteTasksList.append(task);
             $taskInput.val('');
             
+ // Create to-do function //           
 			var gcalId = createToDo(name,taskId);
 		}
     },
@@ -46,6 +48,7 @@ var taskItem = {
         }
     },
     
+// Create EDIT button //    
     edit: function(button) {
         var task = $(button).parents('li[name="Task"]');
         var span = task.children('span[name="Name"]');
@@ -59,7 +62,8 @@ var taskItem = {
         span.replaceWith(input);
         edit.replaceWith(save);
     },
-    
+ 
+// Create SAVE button // 
     save: function(button) {
         var task = $(button).parents('li[name="Task"]');
         var input = task.children('input[name="Edit"]');
@@ -77,7 +81,7 @@ var taskItem = {
         save.replaceWith(edit);
 
     },
-   
+// Create DELETE button // 
         delete: function(button) {
         var task = $(button).parents('li[name="Task"]');
 		var taskId = $(task).attr('taskid');
@@ -86,7 +90,6 @@ var taskItem = {
     } 
 };
 
-// This object allows you to create consistent, functional HTML elements in the DOM without having to re-write code.
 
 var addElement = {
     checkbox: function(onchange) {
@@ -119,6 +122,7 @@ var addElement = {
 $taskInput.focus();
 $addButton.on("click", taskItem.create);
 
+// Build function to be able to add new tasks for a single day // 
 function createToDo(name,taskId){
 	var todaysDate = new Date();
 	var year = todaysDate.getYear()+1900;
@@ -148,6 +152,8 @@ function createToDo(name,taskId){
 	});
 	
 }
+
+// Create function to be able to update the items added // 
 function updateToDo(id, name){
 	var event = {};
 	event.summary = name;
@@ -162,6 +168,7 @@ function updateToDo(id, name){
 	   console.log(event);
 	});
 }
+// Create function to be able to delete the items added //
 function deleteToDo(id){
 	var request = gapi.client.calendar.events.delete({
             'calendarId': 'primary',
